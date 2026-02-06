@@ -5,7 +5,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import { LanguageSwitch } from "@/components/ui/LanguageSwitch";
 import { Gem, Trees, Coins, ArrowRight } from "lucide-react";
 import type { Filiere } from "@/data/mockData";
-import madavolaLogo from "@/assets/madavola-logo.png";
 
 const filiereConfigs = {
   or: {
@@ -63,15 +62,15 @@ export default function FiliereLanding() {
         transition={{ duration: 0.8 }}
         className="text-center mb-12 relative z-10"
       >
-        {/* Logo */}
-        <motion.img
-          src={madavolaLogo}
-          alt="MADAVOLA"
-          className="h-32 md:h-40 mx-auto mb-6 object-contain"
+        {/* Logo text */}
+        <motion.h1
+          className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 bg-clip-text text-transparent mb-6"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.6 }}
-        />
+        >
+          MADAVOLA
+        </motion.h1>
         
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 mb-4">
           <div className="flex gap-1">

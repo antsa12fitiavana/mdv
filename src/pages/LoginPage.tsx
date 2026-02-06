@@ -13,7 +13,7 @@ import {
   Pickaxe, Package, Building2, Search, Store, BarChart3, Award,
   Gem, Trees, Scissors, Truck, Shield
 } from "lucide-react";
-import madavolaLogo from "@/assets/madavola-logo.png";
+import type { TranslationKey } from "@/lib/i18n";
 
 const roleIconsOr: Record<string, React.ComponentType<{ className?: string }>> = {
   orpailleur: Pickaxe,
@@ -98,7 +98,9 @@ export default function LoginPage() {
             {t("changeFiliere")}
           </button>
           
-          <img src={madavolaLogo} alt="MADAVOLA" className="h-20 mx-auto mb-2" />
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 bg-clip-text text-transparent mb-2">
+            MADAVOLA
+          </h1>
           
           <p className={`text-sm mt-1 font-medium ${filiereColors[filiere]}`}>
             {filiereLabels[filiere]}

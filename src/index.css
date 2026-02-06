@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap');
+
+@layer base {
+  :root {
+    --background: 40 33% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 43 96% 46%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 40 20% 94%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 40 15% 93%;
+    --muted-foreground: 222 10% 46%;
+
+    --accent: 152 55% 28%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 43 96% 46%;
+
+    --radius: 0.625rem;
+
+    /* Malagasy flag colors */
+    --mada-red: 0 72% 50%;
+    --mada-green: 145 63% 35%;
+    --mada-white: 0 0% 100%;
+
+    /* Custom MADAVOLA tokens */
+    --gold: 43 96% 46%;
+    --gold-light: 43 90% 70%;
+    --gold-dark: 43 80% 35%;
+    --emerald: 152 55% 28%;
+    --emerald-light: 152 40% 50%;
+    --sapphire: 220 70% 45%;
+    --sapphire-light: 220 60% 65%;
+    --timber: 25 60% 35%;
+    --timber-light: 25 50% 55%;
+    --navy: 222 47% 11%;
+    --navy-light: 222 30% 25%;
+
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 40 20% 90%;
+    --sidebar-primary: 43 96% 46%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 30% 18%;
+    --sidebar-accent-foreground: 40 20% 90%;
+    --sidebar-border: 222 30% 18%;
+    --sidebar-ring: 43 96% 46%;
+
+    /* Shadows */
+    --shadow-gold: 0 4px 20px -4px hsl(43 96% 46% / 0.3);
+    --shadow-card: 0 1px 3px 0 hsl(222 47% 11% / 0.06), 0 1px 2px -1px hsl(222 47% 11% / 0.06);
+    --shadow-elevated: 0 10px 25px -5px hsl(222 47% 11% / 0.1), 0 8px 10px -6px hsl(222 47% 11% / 0.08);
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 40 20% 95%;
+    --card: 222 47% 9%;
+    --card-foreground: 40 20% 95%;
+    --popover: 222 47% 9%;
+    --popover-foreground: 40 20% 95%;
+    --primary: 43 96% 50%;
+    --primary-foreground: 222 47% 8%;
+    --secondary: 222 30% 15%;
+    --secondary-foreground: 40 20% 90%;
+    --muted: 222 25% 14%;
+    --muted-foreground: 40 10% 55%;
+    --accent: 152 50% 35%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 222 25% 16%;
+    --input: 222 25% 16%;
+    --ring: 43 96% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer utilities {
+  .gradient-gold {
+    background: linear-gradient(135deg, hsl(43 96% 46%), hsl(35 90% 55%));
+  }
+  .gradient-emerald {
+    background: linear-gradient(135deg, hsl(152 55% 28%), hsl(160 50% 40%));
+  }
+  .gradient-sapphire {
+    background: linear-gradient(135deg, hsl(220 70% 45%), hsl(230 60% 55%));
+  }
+  .gradient-timber {
+    background: linear-gradient(135deg, hsl(25 60% 35%), hsl(30 50% 45%));
+  }
+  .gradient-dark {
+    background: linear-gradient(135deg, hsl(222 47% 8%), hsl(222 47% 16%));
+  }
+  .shadow-gold {
+    box-shadow: var(--shadow-gold);
+  }
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+  .mada-stripe {
+    background: linear-gradient(90deg, hsl(var(--mada-green)) 33%, hsl(var(--mada-white)) 33% 66%, hsl(var(--mada-red)) 66%);
+  }
+}

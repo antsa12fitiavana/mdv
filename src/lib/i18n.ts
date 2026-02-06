@@ -91,6 +91,7 @@ export const translations = {
     nationalView: "Vue nationale",
     transform: "Transformation",
     transport: "Transport",
+    compliance: "Conformité",
     
     // Lot status
     declared: "Déclaré",
@@ -534,6 +535,7 @@ export const translations = {
     nationalView: "Fahitana nasionaly",
     transform: "Fanovana",
     transport: "Fitaterana",
+    compliance: "Ara-dalàna",
     
     // Lot status
     declared: "Voambara",

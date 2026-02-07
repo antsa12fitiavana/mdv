@@ -3,12 +3,11 @@ import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageSwitch } from "@/components/ui/LanguageSwitch";
-import { motion, AnimatePresence } from "framer-motion";
 import { 
   Home, FileText, Package, HandCoins, CreditCard, FileStack,
   ScanLine, Link2, ArrowRightLeft, LayoutDashboard, Users, ClipboardList,
   Activity, Settings, Search, History, AlertTriangle, Lock,
-  Plane, MapPin, DollarSign, ShieldAlert, Menu, ChevronLeft, LogOut,
+  Plane, MapPin, DollarSign, ShieldAlert, Menu, X, LogOut,
   Scissors, Truck
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -170,7 +169,7 @@ export default function AppLayout() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!user) {
     navigate("/login");
@@ -181,105 +180,126 @@ export default function AppLayout() {
   const menu = menusByFiliere[user.role] || menusByFiliere[Object.keys(menusByFiliere)[0]];
   
   const filiereLabels: Record<string, string> = { or: t("filiereOr"), pierre: t("filierePierre"), bois: t("filiereBois") };
-  const filiereColors: Record<string, string> = { or: "text-amber-500", pierre: "text-blue-500", bois: "text-emerald-500" };
-  const filiereBgColors: Record<string, string> = { or: "bg-amber-500", pierre: "bg-blue-500", bois: "bg-emerald-500" };
+  const filiereColors: Record<string, string> = { or: "text-gold", pierre: "text-sapphire", bois: "text-emerald-brand" };
+  const statusColors: Record<string, string> = { active: "bg-accent text-accent-foreground", pending: "bg-gold/20 text-gold-dark" };
 
   return (
-    <div className="h-screen bg-slate-50 flex w-full overflow-hidden">
-      {/* Malagasy flag stripe */}
-      <div className="fixed top-0 left-0 right-0 h-1 mada-stripe z-50" />
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Skip link for accessibility */}
+      <a href="#main-content" className="skip-link">
+        Aller au contenu principal
+      </a>
 
-      {/* Sidebar */}
-      <AnimatePresence mode="wait">
-        {sidebarOpen && (
-          <motion.aside
-            initial={{ x: -280 }}
-            animate={{ x: 0 }}
-            exit={{ x: -280 }}
-            transition={{ type: "spring", bounce: 0.15, duration: 0.4 }}
-            className="w-64 bg-slate-900 text-slate-100 flex flex-col fixed inset-y-0 left-0 z-30 lg:relative pt-1"
+      {/* Flag stripe */}
+      <div className="h-1 mada-stripe" aria-hidden="true" />
+
+      {/* Header */}
+      <header className="bg-navy sticky top-0 z-40">
+        <div className="flex items-center h-14 px-4 gap-4">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors lg:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+            aria-label={sidebarOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={sidebarOpen}
           >
-            <div className="p-5 border-b border-slate-800">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 bg-clip-text text-transparent mb-1">
-                MADAVOLA
-              </h1>
-              <p className={`text-xs font-medium ${filiereColors[filiere]}`}>
-                {filiereLabels[filiere]}
-              </p>
-            </div>
+            {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
 
-            <nav className="flex-1 overflow-y-auto p-3 space-y-1">
+          <div className="flex items-center gap-3">
+            <span className="text-xl font-bold text-gold">MADAVOLA</span>
+            <span className={`text-xs font-medium ${filiereColors[filiere]} hidden sm:inline`}>
+              {filiereLabels[filiere]}
+            </span>
+          </div>
+
+          <div className="flex-1" />
+
+          <LanguageSwitch variant="minimal" />
+          
+          <span className={`text-xs px-2 py-1 rounded ${statusColors[user.status || "active"]} font-medium`}>
+            {user.status === "active" ? t("active") : t("pending")}
+          </span>
+        </div>
+      </header>
+
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <aside
+          className={`
+            fixed inset-y-0 left-0 z-30 w-64 bg-navy flex flex-col transform transition-transform duration-200 lg:relative lg:translate-x-0
+            ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          `}
+          style={{ top: "calc(0.25rem + 3.5rem)" }}
+          aria-label="Navigation principale"
+        >
+          <nav className="flex-1 overflow-y-auto py-4 px-3" role="navigation">
+            <ul className="space-y-1" role="list">
               {menu?.map((item) => {
                 const isActive = location.pathname === item.path;
                 const Icon = item.icon;
                 return (
-                  <button
-                    key={item.path}
-                    onClick={() => navigate(item.path)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all
-                      ${isActive
-                        ? `bg-slate-800 ${filiereColors[filiere]} font-medium`
-                        : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
-                      }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    {t(item.labelKey)}
-                  </button>
+                  <li key={item.path}>
+                    <button
+                      onClick={() => {
+                        navigate(item.path);
+                        setSidebarOpen(false);
+                      }}
+                      className={`
+                        w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors
+                        focus:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring
+                        ${isActive
+                          ? "bg-sidebar-accent text-sidebar-primary font-medium"
+                          : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                        }
+                      `}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      <Icon className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+                      <span>{t(item.labelKey)}</span>
+                    </button>
+                  </li>
                 );
               })}
-            </nav>
+            </ul>
+          </nav>
 
-            <div className="p-4 border-t border-slate-800">
-              <div className="flex items-center gap-3 mb-3">
-                <div className={`w-9 h-9 rounded-full ${filiereBgColors[filiere]} flex items-center justify-center text-sm font-bold text-white`}>
-                  {user.prenom?.[0] || user.nom[0]}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate text-white">
-                    {user.prenom ? `${user.prenom} ${user.nom}` : user.nom}
-                  </p>
-                  <p className="text-xs text-slate-500 capitalize">{user.label}</p>
-                </div>
+          {/* User section */}
+          <div className="p-4 border-t border-sidebar-border">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-9 h-9 rounded-md bg-sidebar-accent flex items-center justify-center text-sm font-semibold text-sidebar-foreground flex-shrink-0">
+                {user.prenom?.[0] || user.nom[0]}
               </div>
-              <button
-                onClick={() => { logout(); navigate("/login"); }}
-                className="w-full flex items-center gap-2 text-left text-xs text-slate-500 hover:text-slate-300 transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                {t("logout")}
-              </button>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-sidebar-foreground truncate">
+                  {user.prenom ? `${user.prenom} ${user.nom}` : user.nom}
+                </p>
+                <p className="text-xs text-sidebar-foreground/60 truncate">{user.commune}</p>
+              </div>
             </div>
-          </motion.aside>
-        )}
-      </AnimatePresence>
+            <button
+              onClick={() => { logout(); navigate("/login"); }}
+              className="w-full flex items-center gap-2 text-left text-xs text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring rounded"
+            >
+              <LogOut className="w-4 h-4" aria-hidden="true" />
+              {t("logout")}
+            </button>
+          </div>
+        </aside>
 
-      {/* Main */}
-      <main className={`flex-1 flex flex-col h-screen overflow-hidden pt-1 ${sidebarOpen ? 'lg:ml-0' : ''}`}>
-        <header className="h-14 border-b border-slate-200 flex items-center px-4 gap-3 bg-white shrink-0">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
-          >
-            {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-          <div className="flex-1" />
-          <LanguageSwitch variant="minimal" />
-          <span className={`text-xs px-2 py-1 rounded-full ${user.status === "active" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"} font-medium`}>
-            {user.status === "active" ? t("active") : t("pending")}
-          </span>
-          <span className="text-xs text-slate-500">{user.commune}</span>
-        </header>
-
-        <div className="flex-1 overflow-y-auto p-6 bg-slate-50">
-          <Outlet />
-        </div>
-      </main>
+        {/* Main content */}
+        <main id="main-content" className="flex-1 overflow-y-auto">
+          <div className="p-4 md:p-6 max-w-7xl mx-auto">
+            <Outlet />
+          </div>
+        </main>
+      </div>
 
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+          className="fixed inset-0 bg-foreground/50 z-20 lg:hidden"
           onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
         />
       )}
     </div>

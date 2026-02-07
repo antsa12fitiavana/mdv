@@ -1,19 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageSwitch } from "@/components/ui/LanguageSwitch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { 
   ArrowLeft, ChevronRight, Phone, Lock, 
   Pickaxe, Package, Building2, Search, Store, BarChart3, Award,
   Gem, Trees, Scissors, Truck, Shield
 } from "lucide-react";
-import type { TranslationKey } from "@/lib/i18n";
 
 const roleIconsOr: Record<string, React.ComponentType<{ className?: string }>> = {
   orpailleur: Pickaxe,
@@ -50,8 +47,8 @@ export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [pin, setPin] = useState("");
 
-  const filiereLabels = { or: t("filiereOr"), pierre: t("filierePierre"), bois: t("filiereBois") };
-  const filiereColors = { or: "text-amber-500", pierre: "text-blue-500", bois: "text-emerald-500" };
+  const filiereLabels: Record<string, string> = { or: t("filiereOr"), pierre: t("filierePierre"), bois: t("filiereBois") };
+  const filiereColors: Record<string, string> = { or: "text-gold", pierre: "text-sapphire", bois: "text-emerald-brand" };
   
   const roleIcons = filiere === "or" ? roleIconsOr : filiere === "pierre" ? roleIconsPierre : roleIconsBois;
   const demoUsers = getDemoUsers();
@@ -71,136 +68,135 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4 py-8 relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 -left-20 w-40 h-40 rounded-full bg-amber-500/5 blur-3xl" />
-        <div className="absolute bottom-1/3 -right-20 w-60 h-60 rounded-full bg-blue-500/5 blur-3xl" />
-      </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
+      <header className="bg-navy">
+        <div className="h-1 mada-stripe" aria-hidden="true" />
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl font-bold text-gold">MADAVOLA</span>
+            <span className={`text-sm font-medium ${filiereColors[filiere]}`}>
+              {filiereLabels[filiere]}
+            </span>
+          </div>
+          <LanguageSwitch variant="minimal" />
+        </div>
+      </header>
 
-      {/* Language Switch */}
-      <div className="absolute top-4 right-4 z-20">
-        <LanguageSwitch variant="minimal" />
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md relative z-10"
-      >
-        {/* Header */}
-        <div className="text-center mb-8">
+      {/* Main */}
+      <main className="flex-1 flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md">
+          {/* Back button */}
           <button
             onClick={() => navigate("/")}
-            className="text-slate-500 text-sm hover:text-slate-300 transition-colors mb-4 inline-flex items-center gap-1"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             {t("changeFiliere")}
           </button>
-          
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 bg-clip-text text-transparent mb-2">
-            MADAVOLA
-          </h1>
-          
-          <p className={`text-sm mt-1 font-medium ${filiereColors[filiere]}`}>
-            {filiereLabels[filiere]}
-          </p>
-        </div>
 
-        {/* Login Form */}
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8">
-          <h2 className="text-lg font-semibold text-white mb-6">{t("login")}</h2>
+          {/* Login Form Card */}
+          <div className="bg-card border border-border rounded-lg p-6 shadow-gov mb-6">
+            <h1 className="text-xl font-bold text-foreground mb-6">{t("login")}</h1>
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <Label htmlFor="phone" className="text-sm text-slate-400">
-                {t("phone")}
-              </Label>
-              <div className="relative mt-1">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="034 12 345 67"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="pl-10 bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500"
-                />
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <Label htmlFor="phone" className="text-sm font-medium text-foreground">
+                  {t("phone")}
+                </Label>
+                <div className="relative mt-1.5">
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="034 12 345 67"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="pl-10"
+                    aria-describedby="phone-hint"
+                  />
+                </div>
+                <p id="phone-hint" className="sr-only">Entrez votre numéro de téléphone</p>
               </div>
-            </div>
-            <div>
-              <Label htmlFor="pin" className="text-sm text-slate-400">
-                {t("pinCode")}
-              </Label>
-              <div className="relative mt-1">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                <Input
-                  id="pin"
-                  type="password"
-                  placeholder="••••"
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value)}
-                  className="pl-10 bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500"
-                />
+              
+              <div>
+                <Label htmlFor="pin" className="text-sm font-medium text-foreground">
+                  {t("pinCode")}
+                </Label>
+                <div className="relative mt-1.5">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
+                  <Input
+                    id="pin"
+                    type="password"
+                    placeholder="••••"
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value)}
+                    className="pl-10"
+                    aria-describedby="pin-hint"
+                  />
+                </div>
+                <p id="pin-hint" className="sr-only">Entrez votre code PIN à 4 chiffres</p>
               </div>
-            </div>
-            <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold">
-              {t("connect")}
-            </Button>
-          </form>
+              
+              <Button type="submit" className="w-full">
+                {t("connect")}
+              </Button>
+            </form>
 
-          <div className="mt-4 flex items-center justify-between text-sm">
-            <button
-              onClick={() => navigate("/register")}
-              className="text-amber-500 hover:text-amber-400 transition-colors"
-            >
-              {t("register")}
-            </button>
-            <button className="text-slate-500 hover:text-slate-300 transition-colors">
-              {t("forgotPassword")}
-            </button>
+            <div className="mt-4 flex items-center justify-between text-sm">
+              <button
+                onClick={() => navigate("/register")}
+                className="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+              >
+                {t("register")}
+              </button>
+              <button className="text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
+                {t("forgotPassword")}
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Demo Accounts */}
-        <div className="mt-6 bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Separator className="flex-1 bg-slate-700" />
-            <span className="text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">
+          {/* Demo Accounts */}
+          <div className="bg-card border border-border rounded-lg p-6 shadow-gov">
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide mb-4">
               {t("demoAccounts")}
-            </span>
-            <Separator className="flex-1 bg-slate-700" />
-          </div>
+            </h2>
 
-          <div className="grid grid-cols-1 gap-2">
-            {demoUsers.map((user) => {
-              const IconComponent = roleIcons[user.role] || Package;
-              return (
-                <motion.button
-                  key={user.id}
-                  whileHover={{ x: 4 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleDemoLogin(user.id)}
-                  className="flex items-center gap-3 w-full p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 transition-colors text-left group border border-transparent hover:border-slate-600"
-                >
-                  <div className="w-10 h-10 rounded-lg bg-slate-700/50 flex items-center justify-center">
-                    <IconComponent className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">
-                      {user.label}
-                    </p>
-                    <p className="text-xs text-slate-500 truncate">
-                      {user.description}
-                    </p>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-amber-500 transition-colors shrink-0" />
-                </motion.button>
-              );
-            })}
+            <ul className="space-y-2" role="list" aria-label="Liste des comptes de démonstration">
+              {demoUsers.map((user) => {
+                const IconComponent = roleIcons[user.role] || Package;
+                return (
+                  <li key={user.id}>
+                    <button
+                      onClick={() => handleDemoLogin(user.id)}
+                      className="flex items-center gap-3 w-full p-3 rounded-md bg-secondary/50 hover:bg-secondary transition-colors text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      aria-label={`Se connecter en tant que ${user.label}`}
+                    >
+                      <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center flex-shrink-0">
+                        <IconComponent className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground truncate">
+                          {user.label}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {user.description}
+                        </p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" aria-hidden="true" />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </div>
-      </motion.div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-navy py-4">
+        <div className="h-1 mada-stripe" aria-hidden="true" />
+      </footer>
     </div>
   );
 }

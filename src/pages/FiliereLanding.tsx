@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -9,18 +8,18 @@ import type { Filiere } from "@/data/mockData";
 const filiereConfigs = {
   or: {
     icon: Coins,
-    gradient: "from-amber-500 to-yellow-600",
-    hoverGlow: "group-hover:shadow-amber-500/25",
+    colorClass: "bg-gold text-white",
+    borderClass: "border-gold/30 hover:border-gold/60",
   },
   pierre: {
     icon: Gem,
-    gradient: "from-blue-500 to-indigo-600",
-    hoverGlow: "group-hover:shadow-blue-500/25",
+    colorClass: "bg-sapphire text-white",
+    borderClass: "border-sapphire/30 hover:border-sapphire/60",
   },
   bois: {
     icon: Trees,
-    gradient: "from-emerald-600 to-green-700",
-    hoverGlow: "group-hover:shadow-emerald-500/25",
+    colorClass: "bg-emerald-brand text-white",
+    borderClass: "border-emerald-brand/30 hover:border-emerald-brand/60",
   },
 };
 
@@ -41,107 +40,84 @@ export default function FiliereLanding() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
-      {/* Malagasy flag stripe at top */}
-      <div className="absolute top-0 left-0 right-0 h-1.5 mada-stripe" />
-
-      {/* Background decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-amber-500/5 blur-3xl" />
-        <div className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-blue-500/5 blur-3xl" />
-      </div>
-
-      {/* Language Switch */}
-      <div className="absolute top-4 right-4 z-20">
-        <LanguageSwitch variant="minimal" />
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-12 relative z-10"
-      >
-        {/* Logo text */}
-        <motion.h1
-          className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 bg-clip-text text-transparent mb-6"
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          MADAVOLA
-        </motion.h1>
-        
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 mb-4">
-          <div className="flex gap-1">
-            <span className="w-2 h-2 rounded-full bg-mada-green" />
-            <span className="w-2 h-2 rounded-full bg-white" />
-            <span className="w-2 h-2 rounded-full bg-mada-red" />
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header with flag stripe */}
+      <header className="bg-navy">
+        <div className="h-1 mada-stripe" aria-hidden="true" />
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl font-bold text-gold">MADAVOLA</span>
           </div>
-          <span className="text-amber-400 text-sm font-medium tracking-wide">{t("nationalPlatform")}</span>
+          <LanguageSwitch variant="minimal" />
         </div>
-        
-        <p className="text-base md:text-lg text-slate-400 max-w-xl mx-auto leading-relaxed">
-          {t("tagline")}
-        </p>
-      </motion.div>
+      </header>
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
-        className="text-slate-500 text-sm font-medium uppercase tracking-widest mb-8 relative z-10"
-      >
-        {t("selectFiliere")}
-      </motion.p>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full relative z-10">
-        {filieres.map((f, i) => {
-          const config = filiereConfigs[f.id];
-          const Icon = config.icon;
+      {/* Main content */}
+      <main className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+        <div className="text-center mb-12 max-w-2xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-border bg-secondary mb-4">
+            <div className="flex gap-1" aria-hidden="true">
+              <span className="w-2 h-2 rounded-full bg-mada-green" />
+              <span className="w-2 h-2 rounded-full bg-white border border-border" />
+              <span className="w-2 h-2 rounded-full bg-mada-red" />
+            </div>
+            <span className="text-sm font-medium text-foreground">{t("nationalPlatform")}</span>
+          </div>
           
-          return (
-            <motion.button
-              key={f.id}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 + i * 0.15, duration: 0.6 }}
-              whileHover={{ scale: 1.02, y: -4 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => handleSelect(f.id)}
-              className={`group relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8 text-left cursor-pointer transition-all duration-300 hover:border-slate-600 hover:shadow-2xl ${config.hoverGlow}`}
-            >
-              <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${config.gradient} flex items-center justify-center mb-5 shadow-lg`}>
-                <Icon className="w-7 h-7 text-white" />
-              </div>
-              
-              <h2 className="text-2xl font-bold text-white mb-2">
-                {t(f.labelKey)}
-              </h2>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                {t(f.descKey)}
-              </p>
-              
-              <div className="mt-6 flex items-center gap-2 text-slate-300 text-sm font-medium group-hover:text-white transition-colors">
-                {t("access")}
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </motion.button>
-          );
-        })}
-      </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            {t("tagline")}
+          </h1>
+          
+          <p className="text-muted-foreground leading-relaxed">
+            Système national de traçabilité des ressources naturelles de Madagascar
+          </p>
+        </div>
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-        className="mt-16 text-slate-600 text-xs text-center relative z-10"
-      >
-        {t("ministry")}
-      </motion.p>
+        <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-6">
+          {t("selectFiliere")}
+        </p>
 
-      {/* Malagasy flag stripe at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-1.5 mada-stripe" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl w-full">
+          {filieres.map((f) => {
+            const config = filiereConfigs[f.id];
+            const Icon = config.icon;
+            
+            return (
+              <button
+                key={f.id}
+                onClick={() => handleSelect(f.id)}
+                className={`group relative bg-card border-2 ${config.borderClass} rounded-lg p-6 text-left transition-all duration-200 hover:shadow-gov-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`}
+                aria-label={`${t("access")} ${t(f.labelKey)}`}
+              >
+                <div className={`w-12 h-12 rounded-lg ${config.colorClass} flex items-center justify-center mb-4`}>
+                  <Icon className="w-6 h-6" aria-hidden="true" />
+                </div>
+                
+                <h2 className="text-xl font-bold text-foreground mb-2">
+                  {t(f.labelKey)}
+                </h2>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                  {t(f.descKey)}
+                </p>
+                
+                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-primary group-hover:gap-2 transition-all">
+                  {t("access")}
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <p className="mt-12 text-xs text-muted-foreground text-center max-w-md">
+          {t("ministry")}
+        </p>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-navy py-4">
+        <div className="h-1 mada-stripe" aria-hidden="true" />
+      </footer>
     </div>
   );
 }

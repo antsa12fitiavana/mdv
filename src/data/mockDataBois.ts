@@ -1,10 +1,11 @@
-export type BoisRole = 
-  | "exploitant_bois"
-  | "collecteur_bois"
-  | "transformateur_bois"
-  | "exportateur_bois"
-  | "commune_bois"
-  | "controleur_bois";
+export type BoisRole =
+  | "bois_exploitant"
+  | "bois_collecteur"
+  | "bois_transporteur"
+  | "bois_depot"
+  | "bois_exportateur"
+  | "commune"
+  | "controleur";
 
 export interface DemoUserBois {
   id: string;
@@ -27,7 +28,7 @@ export const demoUsersBois: DemoUserBois[] = [
     id: "B001",
     nom: "Ramaroson",
     prenom: "Tiana",
-    role: "exploitant_bois",
+    role: "bois_exploitant",
     label: "Exploitant Bois",
     description: "Exploitant forestier – Moramanga",
     commune: "Moramanga",
@@ -41,7 +42,7 @@ export const demoUsersBois: DemoUserBois[] = [
     id: "B002",
     nom: "Razafindrakoto",
     prenom: "Lova",
-    role: "collecteur_bois",
+    role: "bois_collecteur",
     label: "Collecteur Bois",
     description: "Négociant agréé – Alaotra-Mangoro",
     commune: "Moramanga",
@@ -56,8 +57,8 @@ export const demoUsersBois: DemoUserBois[] = [
     id: "B003",
     nom: "Menuiserie Mada",
     prenom: "",
-    role: "transformateur_bois",
-    label: "Transformateur",
+    role: "bois_depot",
+    label: "Dépôt / Scierie",
     description: "Scierie & Menuiserie – Antsirabe",
     commune: "Antsirabe",
     region: "Vakinankaratra",
@@ -70,7 +71,7 @@ export const demoUsersBois: DemoUserBois[] = [
     id: "B004",
     nom: "Madagascar Wood Export",
     prenom: "",
-    role: "exportateur_bois",
+    role: "bois_exportateur",
     label: "Exportateur Bois",
     description: "Exportateur agréé – Toamasina",
     commune: "Toamasina",
@@ -84,7 +85,7 @@ export const demoUsersBois: DemoUserBois[] = [
     id: "B005",
     nom: "Andrianjafy",
     prenom: "Noro",
-    role: "commune_bois",
+    role: "commune",
     label: "Agent Commune",
     description: "Agent communal – Moramanga",
     commune: "Moramanga",
@@ -97,7 +98,7 @@ export const demoUsersBois: DemoUserBois[] = [
     id: "B006",
     nom: "Rabemananjara",
     prenom: "Solo",
-    role: "controleur_bois",
+    role: "controleur",
     label: "Contrôleur Forêts",
     description: "Agent DREDD – Alaotra-Mangoro",
     commune: "Moramanga",

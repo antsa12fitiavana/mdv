@@ -1,12 +1,14 @@
 import type { Filiere } from "./mockData";
 
-export type PierreRole = 
-  | "exploitant_pierre"
-  | "collecteur_pierre"
-  | "lapidaire"
-  | "exportateur_pierre"
-  | "commune_pierre"
-  | "controleur_pierre";
+export type PierreRole =
+  | "pierre_artisan"
+  | "pierre_collecteur"
+  | "pierre_negociant"
+  | "pierre_comptoir"
+  | "pierre_transporteur"
+  | "pierre_exportateur"
+  | "commune"
+  | "controleur";
 
 export interface DemoUserPierre {
   id: string;
@@ -29,8 +31,8 @@ export const demoUsersPierre: DemoUserPierre[] = [
     id: "P001",
     nom: "Randrianasolo",
     prenom: "Fidy",
-    role: "exploitant_pierre",
-    label: "Exploitant Pierres",
+    role: "pierre_artisan",
+    label: "Artisan Minier",
     description: "Exploitant de saphirs – Ilakaka",
     commune: "Ilakaka",
     region: "Ihorombe",
@@ -43,7 +45,7 @@ export const demoUsersPierre: DemoUserPierre[] = [
     id: "P002",
     nom: "Rasoanaivo",
     prenom: "Bako",
-    role: "collecteur_pierre",
+    role: "pierre_collecteur",
     label: "Collecteur Pierres",
     description: "Négociant agréé – Ihorombe",
     commune: "Ilakaka",
@@ -58,8 +60,8 @@ export const demoUsersPierre: DemoUserPierre[] = [
     id: "P003",
     nom: "Gems Madagascar",
     prenom: "",
-    role: "lapidaire",
-    label: "Lapidaire",
+    role: "pierre_comptoir",
+    label: "Comptoir",
     description: "Atelier de taille – Antsirabe",
     commune: "Antsirabe",
     region: "Vakinankaratra",
@@ -72,7 +74,7 @@ export const demoUsersPierre: DemoUserPierre[] = [
     id: "P004",
     nom: "Madagascar Gems Export",
     prenom: "",
-    role: "exportateur_pierre",
+    role: "pierre_exportateur",
     label: "Exportateur Pierres",
     description: "Exportateur agréé – Antananarivo",
     commune: "Antananarivo",
@@ -86,7 +88,7 @@ export const demoUsersPierre: DemoUserPierre[] = [
     id: "P005",
     nom: "Andriamihaja",
     prenom: "Zo",
-    role: "commune_pierre",
+    role: "commune",
     label: "Agent Commune",
     description: "Agent communal – Ilakaka",
     commune: "Ilakaka",
@@ -99,7 +101,7 @@ export const demoUsersPierre: DemoUserPierre[] = [
     id: "P006",
     nom: "Rakotonirina",
     prenom: "Haja",
-    role: "controleur_pierre",
+    role: "controleur",
     label: "Contrôleur Mines",
     description: "Contrôleur BCMM – Ihorombe",
     commune: "Ilakaka",

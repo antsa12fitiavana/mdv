@@ -7,7 +7,20 @@ export type UserRole =
   | "controleur"
   | "comptoir"
   | "dirigeant"
-  | "com";
+  | "com"
+  // Pierres Roles
+  | "pierre_artisan"
+  | "pierre_collecteur"
+  | "pierre_negociant"
+  | "pierre_comptoir"
+  | "pierre_transporteur"
+  | "pierre_exportateur"
+  // Bois Roles
+  | "bois_exploitant"
+  | "bois_collecteur"
+  | "bois_transporteur"
+  | "bois_depot"
+  | "bois_exportateur";
 
 export interface DemoUser {
   id: string;
@@ -158,12 +171,12 @@ export const demoUsers: DemoUser[] = [
     nom: "Nomena",
     prenom: "Lala",
     role: "dirigeant",
-    label: "Dirigeant (MMRS)",
-    description: "Ministre des Mines et Ressources Stratégiques",
+    label: "Dirigeant (MIM)",
+    description: "Ministère des Mines (MIM)",
     commune: "Antananarivo",
     region: "Analamanga",
     telephone: "020 22 000 01",
-    email: "lala.nomena@mines.gov.mg",
+    email: "lala.nomena@mim.gov.mg",
     status: "active",
   },
   {

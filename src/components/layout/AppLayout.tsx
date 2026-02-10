@@ -3,13 +3,19 @@ import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageSwitch } from "@/components/ui/LanguageSwitch";
-import { 
+import {
   Home, FileText, Package, HandCoins, CreditCard, FileStack,
   ScanLine, Link2, ArrowRightLeft, LayoutDashboard, Users, ClipboardList,
   Activity, Settings, Search, History, AlertTriangle, Lock,
   Plane, MapPin, DollarSign, ShieldAlert, Menu, X, LogOut,
-  Scissors, Truck
+  Scissors, Truck, User, Edit, Save
 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { KarabolamenaCard } from "@/components/ui/KarabolamenaCard";
 import type { LucideIcon } from "lucide-react";
 import type { TranslationKey } from "@/lib/i18n";
 
@@ -78,14 +84,14 @@ const menusOrByRole: Record<string, MenuItem[]> = {
 };
 
 const menusPierreByRole: Record<string, MenuItem[]> = {
-  exploitant_pierre: [
+  pierre_artisan: [
     { labelKey: "home", icon: Home, path: "/dashboard" },
-    { labelKey: "declareProduction", icon: FileText, path: "/dashboard/declare" },
+    { labelKey: "declareLot", icon: FileText, path: "/dashboard/declare" }, // Changed declareProduction to declareLot for consistency
     { labelKey: "myLots", icon: Package, path: "/dashboard/lots" },
     { labelKey: "sell", icon: HandCoins, path: "/dashboard/sell" },
     { labelKey: "payments", icon: CreditCard, path: "/dashboard/payments" },
   ],
-  collecteur_pierre: [
+  pierre_collecteur: [
     { labelKey: "home", icon: Home, path: "/dashboard" },
     { labelKey: "scanBuy", icon: ScanLine, path: "/dashboard/scan-buy" },
     { labelKey: "myLots", icon: Package, path: "/dashboard/lots" },
@@ -93,27 +99,40 @@ const menusPierreByRole: Record<string, MenuItem[]> = {
     { labelKey: "sell", icon: HandCoins, path: "/dashboard/sell" },
     { labelKey: "transactions", icon: ArrowRightLeft, path: "/dashboard/transactions" },
   ],
-  lapidaire: [
+  pierre_negociant: [
+    { labelKey: "home", icon: Home, path: "/dashboard" },
+    { labelKey: "scanBuy", icon: ScanLine, path: "/dashboard/scan-buy" },
+    { labelKey: "myLots", icon: Package, path: "/dashboard/lots" },
+    { labelKey: "consolidate", icon: Link2, path: "/dashboard/consolidate" },
+    { labelKey: "sell", icon: HandCoins, path: "/dashboard/sell" },
+    { labelKey: "transactions", icon: ArrowRightLeft, path: "/dashboard/transactions" },
+  ],
+  pierre_comptoir: [
     { labelKey: "home", icon: Home, path: "/dashboard" },
     { labelKey: "purchases", icon: ScanLine, path: "/dashboard/scan-buy" },
     { labelKey: "stock", icon: Package, path: "/dashboard/lots" },
-    { labelKey: "transform", icon: Scissors, path: "/dashboard/transform" },
-    { labelKey: "sell", icon: HandCoins, path: "/dashboard/sell" },
+    { labelKey: "exports", icon: Plane, path: "/dashboard/exports" },
+    { labelKey: "payments", icon: CreditCard, path: "/dashboard/payments" },
   ],
-  exportateur_pierre: [
+  pierre_transporteur: [
+    { labelKey: "home", icon: Home, path: "/dashboard" },
+    { labelKey: "transport", icon: Truck, path: "/dashboard/transport" },
+    { labelKey: "history", icon: History, path: "/dashboard/history" },
+  ],
+  pierre_exportateur: [
     { labelKey: "dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { labelKey: "purchases", icon: ScanLine, path: "/dashboard/purchases" },
     { labelKey: "stock", icon: Package, path: "/dashboard/lots" },
     { labelKey: "exports", icon: Plane, path: "/dashboard/exports" },
     { labelKey: "payments", icon: CreditCard, path: "/dashboard/payments" },
   ],
-  commune_pierre: [
+  commune: [ // Renamed from commune_pierre
     { labelKey: "dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { labelKey: "registrations", icon: ClipboardList, path: "/dashboard/registrations" },
     { labelKey: "accounts", icon: Users, path: "/dashboard/accounts" },
     { labelKey: "payments", icon: DollarSign, path: "/dashboard/commune-payments" },
   ],
-  controleur_pierre: [
+  controleur: [ // Renamed from controleur_pierre
     { labelKey: "home", icon: Home, path: "/dashboard" },
     { labelKey: "scanControl", icon: Search, path: "/dashboard/scan-control" },
     { labelKey: "history", icon: History, path: "/dashboard/history" },
@@ -122,14 +141,14 @@ const menusPierreByRole: Record<string, MenuItem[]> = {
 };
 
 const menusBoisByRole: Record<string, MenuItem[]> = {
-  exploitant_bois: [
+  bois_exploitant: [ // Renamed from exploitant_bois
     { labelKey: "home", icon: Home, path: "/dashboard" },
     { labelKey: "declareLot", icon: FileText, path: "/dashboard/declare" },
     { labelKey: "myLots", icon: Package, path: "/dashboard/lots" },
     { labelKey: "sell", icon: HandCoins, path: "/dashboard/sell" },
     { labelKey: "payments", icon: CreditCard, path: "/dashboard/payments" },
   ],
-  collecteur_bois: [
+  bois_collecteur: [ // Renamed from collecteur_bois
     { labelKey: "home", icon: Home, path: "/dashboard" },
     { labelKey: "scanBuy", icon: ScanLine, path: "/dashboard/scan-buy" },
     { labelKey: "stock", icon: Package, path: "/dashboard/lots" },
@@ -137,26 +156,31 @@ const menusBoisByRole: Record<string, MenuItem[]> = {
     { labelKey: "sell", icon: HandCoins, path: "/dashboard/sell" },
     { labelKey: "transactions", icon: ArrowRightLeft, path: "/dashboard/transactions" },
   ],
-  transformateur_bois: [
+  bois_depot: [ // Renamed from transformateur_bois
     { labelKey: "home", icon: Home, path: "/dashboard" },
     { labelKey: "purchases", icon: ScanLine, path: "/dashboard/scan-buy" },
     { labelKey: "stock", icon: Package, path: "/dashboard/lots" },
     { labelKey: "transform", icon: Scissors, path: "/dashboard/transform" },
     { labelKey: "sell", icon: HandCoins, path: "/dashboard/sell" },
   ],
-  exportateur_bois: [
+  bois_transporteur: [ // Added
+    { labelKey: "home", icon: Home, path: "/dashboard" },
+    { labelKey: "transport", icon: Truck, path: "/dashboard/transport" },
+    { labelKey: "history", icon: History, path: "/dashboard/history" },
+  ],
+  bois_exportateur: [ // Renamed from exportateur_bois
     { labelKey: "dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { labelKey: "purchases", icon: ScanLine, path: "/dashboard/purchases" },
     { labelKey: "stock", icon: Package, path: "/dashboard/lots" },
     { labelKey: "exports", icon: Plane, path: "/dashboard/exports" },
   ],
-  commune_bois: [
+  commune: [ // Renamed from commune_bois
     { labelKey: "dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { labelKey: "registrations", icon: ClipboardList, path: "/dashboard/registrations" },
     { labelKey: "accounts", icon: Users, path: "/dashboard/accounts" },
     { labelKey: "payments", icon: DollarSign, path: "/dashboard/commune-payments" },
   ],
-  controleur_bois: [
+  controleur: [ // Renamed from controleur_bois
     { labelKey: "home", icon: Home, path: "/dashboard" },
     { labelKey: "scanControl", icon: Search, path: "/dashboard/scan-control" },
     { labelKey: "history", icon: History, path: "/dashboard/history" },
@@ -170,6 +194,8 @@ export default function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [editProfile, setEditProfile] = useState({ nom: user?.nom, prenom: user?.prenom, telephone: user?.telephone });
 
   if (!user) {
     navigate("/login");
@@ -178,10 +204,18 @@ export default function AppLayout() {
 
   const menusByFiliere = filiere === "or" ? menusOrByRole : filiere === "pierre" ? menusPierreByRole : menusBoisByRole;
   const menu = menusByFiliere[user.role] || menusByFiliere[Object.keys(menusByFiliere)[0]];
-  
+
   const filiereLabels: Record<string, string> = { or: t("filiereOr"), pierre: t("filierePierre"), bois: t("filiereBois") };
   const filiereColors: Record<string, string> = { or: "text-gold", pierre: "text-sapphire", bois: "text-emerald-brand" };
   const statusColors: Record<string, string> = { active: "bg-accent text-accent-foreground", pending: "bg-gold/20 text-gold-dark" };
+
+  const isKarabolamena = user.id === "U001"; // Demo check
+
+  const handleSaveProfile = () => {
+    // In a real app, this would update the backend/context
+    toast.success("Profil mis à jour avec succès");
+    setIsProfileOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -214,8 +248,15 @@ export default function AppLayout() {
 
           <div className="flex-1" />
 
+          {isKarabolamena && (
+            <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full text-white text-xs font-bold shadow-lg mr-2 animate-pulse">
+              <CreditCard className="w-3 h-3" />
+              KARABOLAMENA
+            </div>
+          )}
+
           <LanguageSwitch variant="minimal" />
-          
+
           <span className={`text-xs px-2 py-1 rounded ${statusColors[user.status || "active"]} font-medium`}>
             {user.status === "active" ? t("active") : t("pending")}
           </span>
@@ -265,17 +306,87 @@ export default function AppLayout() {
 
           {/* User section */}
           <div className="p-4 border-t border-sidebar-border">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-md bg-sidebar-accent flex items-center justify-center text-sm font-semibold text-sidebar-foreground flex-shrink-0">
-                {user.prenom?.[0] || user.nom[0]}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-sidebar-foreground truncate">
-                  {user.prenom ? `${user.prenom} ${user.nom}` : user.nom}
-                </p>
-                <p className="text-xs text-sidebar-foreground/60 truncate">{user.commune}</p>
-              </div>
-            </div>
+            <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
+              <DialogTrigger asChild>
+                <div role="button" className="flex items-center gap-3 mb-3 cursor-pointer hover:bg-sidebar-accent/50 p-2 rounded transition-colors group">
+                  <div className="relative">
+                    <div className="w-9 h-9 rounded-md bg-sidebar-accent flex items-center justify-center text-sm font-semibold text-sidebar-foreground flex-shrink-0 group-hover:bg-sidebar-accent-foreground group-hover:text-sidebar-accent transition-colors">
+                      {user.prenom?.[0] || user.nom[0]}
+                    </div>
+                    {isKarabolamena && (
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-amber-500 rounded-full border-2 border-navy flex items-center justify-center">
+                        <CreditCard className="w-2 h-2 text-white" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-sidebar-foreground truncate flex items-center gap-2">
+                      {user.prenom ? `${user.prenom} ${user.nom}` : user.nom}
+                      <Edit className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </p>
+                    <p className="text-xs text-sidebar-foreground/60 truncate">{user.commune}</p>
+                  </div>
+                </div>
+              </DialogTrigger>
+              <DialogContent className="bg-slate-900 border-slate-700 text-white">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <User className="w-5 h-5" />
+                    Modifier le profil
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-4 max-h-[70vh] overflow-y-auto">
+                  {/* Karabolamena Card */}
+                  <div className="mb-6 flex justify-center">
+                    <KarabolamenaCard user={{
+                      id: user.id,
+                      nom: user.nom,
+                      prenom: user.prenom,
+                      role: user.role,
+                      cin: user.cin,
+                      commune: user.commune,
+                      filiere: filiere
+                    }} />
+                  </div>
+
+                  <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                    <h4 className="text-sm font-semibold mb-3 text-slate-300">Informations Personnelles</h4>
+                    <div className="grid gap-3">
+                      <div className="grid gap-1">
+                        <Label className="text-xs text-slate-400">Nom</Label>
+                        <Input
+                          value={editProfile.nom}
+                          onChange={(e) => setEditProfile({ ...editProfile, nom: e.target.value })}
+                          className="bg-slate-900 border-slate-600 h-8 text-sm"
+                        />
+                      </div>
+                      <div className="grid gap-1">
+                        <Label className="text-xs text-slate-400">Prénom</Label>
+                        <Input
+                          value={editProfile.prenom}
+                          onChange={(e) => setEditProfile({ ...editProfile, prenom: e.target.value })}
+                          className="bg-slate-900 border-slate-600 h-8 text-sm"
+                        />
+                      </div>
+                      <div className="grid gap-1">
+                        <Label className="text-xs text-slate-400">Téléphone</Label>
+                        <Input
+                          value={editProfile.telephone}
+                          onChange={(e) => setEditProfile({ ...editProfile, telephone: e.target.value })}
+                          className="bg-slate-900 border-slate-600 h-8 text-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button onClick={handleSaveProfile} className="w-full bg-amber-600 hover:bg-amber-700 mt-2">
+                    <Save className="w-4 h-4 mr-2" />
+                    Enregistrer les modifications
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <button
               onClick={() => { logout(); navigate("/login"); }}
               className="w-full flex items-center gap-2 text-left text-xs text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring rounded"

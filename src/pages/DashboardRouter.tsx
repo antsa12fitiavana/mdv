@@ -23,8 +23,21 @@ import Paiements from "./shared/Paiements";
 import Transactions from "./shared/Transactions";
 
 // Generic pages for Pierre/Bois
+// Pierre Pages
 import PierreExploitantHome from "./pierre/PierreExploitantHome";
+import PierreCollecteurHome from "./pierre/PierreCollecteurHome";
+import PierreNegociantHome from "./pierre/PierreNegociantHome";
+import PierreComptoirHome from "./pierre/PierreComptoirHome";
+import PierreTransporteurHome from "./pierre/PierreTransporteurHome";
+import PierreExportateurHome from "./pierre/PierreExportateurHome";
+
+// Bois Pages
 import BoisExploitantHome from "./bois/BoisExploitantHome";
+import BoisCollecteurHome from "./bois/BoisCollecteurHome";
+import BoisDepotHome from "./bois/BoisDepotHome";
+import BoisTransporteurHome from "./bois/BoisTransporteurHome";
+import BoisExportateurHome from "./bois/BoisExportateurHome";
+
 import TransformationPage from "./shared/TransformationPage";
 import TransportPage from "./shared/TransportPage";
 
@@ -54,18 +67,27 @@ export default function DashboardRouter() {
         default: return <OrpailleurHome />;
       }
     } else if (filiere === "pierre") {
-      if (role.includes("exploitant") || role.includes("collecteur") || role === "lapidaire" || role.includes("exportateur")) {
-        return <PierreExploitantHome />;
-      }
-      if (role.includes("commune")) return <CommuneHome />;
-      if (role.includes("controleur")) return <ControleurHome />;
+      // Pierre Roles
+      if (role === "pierre_artisan") return <PierreExploitantHome />;
+      if (role === "pierre_collecteur") return <PierreCollecteurHome />;
+      if (role === "pierre_negociant") return <PierreNegociantHome />;
+      if (role === "pierre_comptoir") return <PierreComptoirHome />;
+      if (role === "pierre_transporteur") return <PierreTransporteurHome />;
+      if (role === "pierre_exportateur") return <PierreExportateurHome />;
+
+      if (role === "commune") return <CommuneHome />;
+      if (role === "controleur") return <ControleurHome />;
       return <PierreExploitantHome />;
     } else {
-      if (role.includes("exploitant") || role.includes("collecteur") || role.includes("transformateur") || role.includes("exportateur")) {
-        return <BoisExploitantHome />;
-      }
-      if (role.includes("commune")) return <CommuneHome />;
-      if (role.includes("controleur")) return <ControleurHome />;
+      // Bois Roles
+      if (role === "bois_exploitant") return <BoisExploitantHome />;
+      if (role === "bois_collecteur") return <BoisCollecteurHome />;
+      if (role === "bois_depot") return <BoisDepotHome />;
+      if (role === "bois_transporteur") return <BoisTransporteurHome />;
+      if (role === "bois_exportateur") return <BoisExportateurHome />;
+
+      if (role === "commune") return <CommuneHome />;
+      if (role === "controleur") return <ControleurHome />;
       return <BoisExploitantHome />;
     }
   };
